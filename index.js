@@ -10,6 +10,8 @@ csv().fromFile(filepath).then((matchesJson)=>{
     dataprocessingFunctions.matchesWonPerTeamForAllYear(matchesJson);
     csv().fromFile('./data-set/deliveries.csv').then((deliveriesJson)=>{
       dataprocessingFunctions.extraRunConductedInYear(matchesJson,deliveriesJson,'2016');
+      dataprocessingFunctions.economicalBowlersInYears(matchesJson,deliveriesJson,'2015')
+
     })
     
 })
