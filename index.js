@@ -7,6 +7,7 @@ const filepath='./data-set/matches.csv';
 
 csv().fromFile(filepath).then((matchesJson)=>{
     dataprocessingFunctions.matchesPerYear(matchesJson);
+    dataprocessingFunctions.matchesWonPerTeamForAllYear(matchesJson);
     
 })
 

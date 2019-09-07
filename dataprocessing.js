@@ -9,6 +9,18 @@ function matchesPerYear(matchesJson)
     writeJson.writeJSONFile(result,'matchesPerYear');   
 }
 
+function matchesWonPerTeamForAllYear(matchesJson)
+{
+    let result=matchesJson.reduce((obj,match)=>{
+        if(obj[match['winner']]==undefined)
+        {
+          obj[match['winner']]={};
+        }
+          obj[match['winner']][match['season']] = (obj[match['winner']][match['season']] || 0)+1;
+        return obj;
+      },{});
+    writeJson.writeJSONFile(result,'matchesWonPerTeamForAllYear');
+}
 
 
-module.exports={matchesPerYear}
+module.exports={matchesPerYear,matchesWonPerTeamForAllYear}
