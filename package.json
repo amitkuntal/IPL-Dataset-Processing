@@ -4,7 +4,7 @@
   "description": "Project For IPL Data set",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "Amit",
   "license": "ISC",
@@ -13,6 +13,7 @@
   },
   "devDependencies": {
     "eslint": "^6.3.0",
+    "jest": "^24.9.0",
     "nodemon": "^1.19.2"
   }
 }

@@ -2,11 +2,21 @@ const writeJson= require('./index.js')
 
 function matchesPerYear(matchesJson)
 {
-    let result=matchesJson.reduce((obj,match)=>{
-        obj[match['season']] = (obj[match['season']] || 0)+1;
-        return obj;
-      },{});
-    writeJson.writeJSONFile(result,'matchesPerYear');   
+  if(matchesJson.length > 0 && typeof(matchesJson)=='object')
+  {
+      let result=matchesJson.reduce((obj,match)=>{
+          obj[match['season']] = (obj[match['season']] || 0)+1;
+          return obj;
+        },{});
+      //writeJson.writeJSONFile(result,'matchesPerYear'); 
+      if(result["undefined"])
+      {
+        return "Could not find session in current data";
+      }
+      return JSON.stringify(result);  
+    }
+    return "You entered empty file or file is not data is not proper format";
+
 }
 
 function matchesWonPerTeamForAllYear(matchesJson)
