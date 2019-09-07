@@ -23,4 +23,22 @@ function matchesWonPerTeamForAllYear(matchesJson)
 }
 
 
-module.exports={matchesPerYear,matchesWonPerTeamForAllYear}
+function extraRunConductedInYear(matches,deliveries,year)
+{
+  let matchId=matches.filter((match)=>match.season==year).map((match)=> match.id);
+
+  let result = deliveries.reduce((obj,delivery)=>
+  {
+    if(matchId.includes(delivery['match_id']))
+    {
+      obj[delivery['bowling_team']]=(obj[delivery['bowling_team']] || 0)+parseInt(delivery['extra_runs']);
+    }
+    return obj;
+  },{})
+
+
+  writeJson.writeJSONFile(result,'extraRunConductedInYear');
+}
+
+
+module.exports={matchesPerYear,matchesWonPerTeamForAllYear,extraRunConductedInYear}
