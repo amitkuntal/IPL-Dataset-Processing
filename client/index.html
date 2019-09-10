@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src='index.js'></script>
+    <button onclick="displayChart('matchesPerYear','Match Played Per Year','Number of Matches','Total Match Played Per Year')">Matches Played Per Year</button>
+    <button onclick="displayChartForNestedObject('matchesWonPerTeamForAllYear','Match Win Per Year','Matches')">Matches Won Per Team For All Years</button>
+    <button onclick="displayChart('extraRunConductedInYear','Extra Run Conducted In year 2016','Total Extra Run','Total Extra Run Conducted In Year 2016')">Extra Run Conduct In year</button>
+    <button onclick="displayChart('economicalBowlersInYears','Economic Bowler In year 2015','Economy Rate','Economic Bowler In Year 2015')">Economic Bowler In Year</button>
+    
+    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+</body>
+</html>
