@@ -1,97 +1,126 @@
-const writeJson= require('./index.js')
+//================================== function for calculating total matches per year
 
 function matchesPerYear(matchesJson)
-{
-  if(matchesJson.length > 0 && typeof(matchesJson)=='object')
-  {
-      let result=matchesJson.reduce((obj,match)=>{
-          obj[match['season']] = (obj[match['season']] || 0)+1;
-          return obj;
-        },{});
-      //writeJson.writeJSONFile(result,'matchesPerYear'); 
-      if(result["undefined"])
-      {
-        return "Could not find session in current data";
-      }
-      return JSON.stringify(result);  
+{ 
+  try{
+        if(matchesJson.length > 0 && typeof(matchesJson)=='object')
+        {
+            let matches=matchesJson.reduce((matches,match)=>{
+              matches[match['season']] = (matches[match['season']] || 0)+1;
+                return matches;
+              },{});
+      
+            if(matches["undefined"])
+            {
+              return "Could not find session in current data";
+            }
+            return matches;  
+        }
+      return "You entered empty file or file data is not proper format";
     }
-    return "You entered empty file or file is not data is not proper format";
-
+    catch(err){
+      console.log(err);
+    } 
 }
 
+// ==================================================== Function for calculating matches per year for all team
 function matchesWonPerTeamForAllYear(matchesJson)
 {
-    let result=matchesJson.reduce((obj,match)=>{
-        if(obj[match['winner']]==undefined)
+  try{
+    if(matchesJson.length > 0 && typeof(matchesJson)=='object')
+    {
+      let matchesPerTeam=matchesJson.reduce((matchesPerTeam,match)=>{
+        if(matchesPerTeam[match['winner']]==undefined)
         {
-          obj[match['winner']]={};
+          matchesPerTeam[match['winner']]={};
         }
-          obj[match['winner']][match['season']] = (obj[match['winner']][match['season']] || 0)+1;
-        return obj;
-      },{});
-    writeJson.writeJSONFile(result,'matchesWonPerTeamForAllYear');
+        matchesPerTeam[match['winner']][match['season']] = (matchesPerTeam[match['winner']][match['season']] || 0)+1;
+        return matchesPerTeam;
+        },{});
+
+      return matchesPerTeam;
+    }
+    return "You entered empty file or file data is not proper format";
+  }
+  catch(err){
+    console.log(err);
+  }
 }
 
-
+// ======================================================= Function for calculating Extra run conducted in a year
 function extraRunConductedInYear(matches,deliveries,year)
 {
-  let matchId=matches.filter((match)=>match.season==year).map((match)=> match.id);
-
-  let result = deliveries.reduce((obj,delivery)=>
-  {
-    if(matchId.includes(delivery['match_id']))
+  try{
+    if((matches.length > 0 && deliveries.length>0) && (typeof(matches)=='object' && typeof(deliveries)=='object'))
     {
-      obj[delivery['bowling_team']]=(obj[delivery['bowling_team']] || 0)+parseInt(delivery['extra_runs']);
-    }
-    return obj;
-  },{})
+    let matchId=matches.filter((match)=>match.season==year).map((match)=> match.id);
 
-
-  writeJson.writeJSONFile(result,'extraRunConductedInYear');
-}
-
-
-
-function economicalBowlersInYears(matches,deliveries,year)
-{
-  let matchId=matches.filter((match)=>match.season==year).map((match)=> match.id);
-  let result=deliveries.reduce((obj,delivery)=>{
-    if(matchId.includes(delivery['match_id']))
-    {
-
-      if(obj[delivery['bowler']]==undefined)
-        {
-          obj[delivery['bowler']]={};
-        }
-        obj[delivery['bowler']]['total_runs']=(obj[delivery['bowler']]['total_runs'] || 0)+ (parseInt(delivery['total_runs']))-((parseInt(delivery['legbye_runs']))+parseInt(delivery['bye_runs']));
-        if(delivery['wide_runs']=='0' && delivery['noball_runs']=='0')
-        {
-          obj[delivery['bowler']]['total_balls']=(obj[delivery['bowler']]['total_balls'] ||0)+1;
-        }
-    }
-    return obj;
-  },{})
-  var bowlersEconomy=getTopBowlersEconomy(calculateEconomy(result),10);
-  
-  var getTopBowlers=bowlersEconomy.reduce((result,bowler)=>{
-      result[bowler['bowler_name']]=bowler['economy'];
-      return result;
+    let extraRun = deliveries.reduce((extraRun,delivery)=>{
+      if(matchId.includes(delivery['match_id']))
+      {
+        extraRun[delivery['bowling_team']]=(extraRun[delivery['bowling_team']] || 0)+parseInt(delivery['extra_runs']);
+      }
+      return extraRun;
     },{})
+    return extraRun;
+  }
+  return "You entered empty file or file data is not proper format";
+  }
+  catch(err){
+    console.log(err);
+  }
+}
+
+// Function fo calulating economical bowler of the
+
+function economicalBowlersInYears(matches,deliveries,year,topCount)
+{
+  try{
+    if((matches.length > 0 && deliveries.length>0) && (typeof(matches)=='object' && typeof(deliveries)=='object'))
+    {
+      let matchId=matches.filter((match)=>match.season==year).map((match)=> match.id);
+      let bolAndRunCount=deliveries.reduce((bolAndRunCount,delivery)=>{
+        if(matchId.includes(delivery['match_id']))
+        {
+          if(bolAndRunCount[delivery['bowler']]==undefined)
+            {
+              bolAndRunCount[delivery['bowler']]={};
+            }
+            bolAndRunCount[delivery['bowler']]['total_runs']=(bolAndRunCount[delivery['bowler']]['total_runs'] || 0)+ (parseInt(delivery['total_runs']))-((parseInt(delivery['legbye_runs']))+parseInt(delivery['bye_runs']));
+            bolAndRunCount[delivery['bowler']]['total_balls']=(bolAndRunCount[delivery['bowler']]['total_balls'] ||0)+1;
+        }
+        return bolAndRunCount;
+      },{})
+      
+      var bowlersEconomy=getTopBowlersEconomy(calculateEconomy(bolAndRunCount),topCount);
   
-    writeJson.writeJSONFile(getTopBowlers,'economicalBowlersInYears');
+      var getTopBowlers=bowlersEconomy.reduce((getTopBowlers,bowler)=>{
+        getTopBowlers[bowler['bowler_name']]=bowler['economy'];
+          return getTopBowlers;
+        },{})
+      
+       return getTopBowlers;
+      }
+      return "You entered empty file or file data is not proper format";
+  
+    }
+      catch(err){
+        console.log(err);
+      }
 }
   
-function calculateEconomy(result){
+function calculateEconomy(bolAndRunCount){
 
-  return Object.entries(result).reduce((acc,el)=>
+  return Object.entries(bolAndRunCount).reduce((economy,bolAndRunCount)=>
           {
-            var obj={}
-            obj['bowler_name']=el[0]
-            obj['economy']=el[1]["total_runs"]/(el[1]["total_balls"]/6);
-            acc.push(obj);
-            return acc;
-          },[]).sort(function(obj1, obj2) {
-            return obj1.economy - obj2.economy;
+
+            var bowlerEconomy={}
+            bowlerEconomy['bowler_name']=bolAndRunCount[0]
+            bowlerEconomy['economy']=bolAndRunCount[1]["total_runs"]/(bolAndRunCount[1]["total_balls"]/6);
+            economy.push(bowlerEconomy);
+            return economy;
+          },[]).sort(function(bowlerOne, bowlerTwo) {
+            return bowlerOne.economy - bowlerTwo.economy;
           });
 }
 

@@ -6,22 +6,33 @@ const fs = require("fs");
 const filepath='./data-set/matches.csv';
 try{
     csv().fromFile(filepath).then((matchesJson)=>{
-        dataprocessingFunctions.matchesPerYear(matchesJson);
-        dataprocessingFunctions.matchesWonPerTeamForAllYear(matchesJson);
+        let matchesPerYear=dataprocessingFunctions.matchesPerYear(matchesJson);
+        writeJSONFile(matchesPerYear,'matchesPerYear');
+
+        let matchesWonPerTeamForAllYear=dataprocessingFunctions.matchesWonPerTeamForAllYear(matchesJson);
+        writeJSONFile(matchesWonPerTeamForAllYear,'matchesWonPerTeamForAllYear')
+
         csv().fromFile('./data-set/deliveries.csv').then((deliveriesJson)=>{
-          dataprocessingFunctions.extraRunConductedInYear(matchesJson,deliveriesJson,'2016');
-          dataprocessingFunctions.economicalBowlersInYears(matchesJson,deliveriesJson,'2015')
+
+          let extraRunConductedInYear=dataprocessingFunctions.extraRunConductedInYear(matchesJson,deliveriesJson,'2016');
+          writeJSONFile(extraRunConductedInYear,'extraRunConductedInYear')
+
+
+          let economicalBowlersInYears =dataprocessingFunctions.economicalBowlersInYears(matchesJson,deliveriesJson,'2015',10)
+          writeJSONFile(economicalBowlersInYears,'economicalBowlersInYears')
 
         })
         
     })
+    // .catch(() => {})
 }
 catch(err){
   console.log(err);
 }
 
-try{
-    function writeJSONFile(result,JSONfilename){
+
+ function writeJSONFile(result,JSONfilename){
+      try{
         fs.writeFile("./output/"+JSONfilename+".json", JSON.stringify(result), (err) => {
             if (err) {
                 console.error(err);
@@ -30,12 +41,13 @@ try{
             console.log(JSONfilename+".json  created");
         });
     }
+    catch(err)
+    {
+      console.log(err);
+    }
 }
-catch(err)
-{
-  console.log(err);
-}
-module.exports.writeJSONFile=writeJSONFile;
+
+// module.exports.writeJSONFile=writeJSONFile;
 
 
 
