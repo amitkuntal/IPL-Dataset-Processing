@@ -1,119 +1,122 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable require-jsdoc */
 function displayChart(fileName, titleText, yAxisText, seriesName) {
   fetch(`../output/${fileName}.json`)
-    .then(response => response.json())
-    .then(data => {
-      chartForObjects(data, titleText, yAxisText, seriesName);
-    });
+      .then((response) => response.json())
+      .then((data) => {
+        chartForObjects(data, titleText, yAxisText, seriesName);
+      });
 }
 
 function chartForObjects(data, titleText, yAxisText, seriesName) {
-  Highcharts.chart("container", {
+  Highcharts.chart('container', {
     chart: {
-      type: "column"
+      type: 'column',
     },
     title: {
-      text: titleText
+      text: titleText,
     },
     xAxis: {
-      categories: Object.keys(data)
+      categories: Object.keys(data),
     },
     yAxis: {
       min: 0,
       title: {
-        text: yAxisText
+        text: yAxisText,
       },
       stackLabels: {
         enabled: true,
         style: {
-          fontWeight: "bold",
+          fontWeight: 'bold',
           color:
             // theme
             (Highcharts.defaultOptions.title.style &&
               Highcharts.defaultOptions.title.style.color) ||
-            "gray"
-        }
-      }
+            'gray',
+        },
+      },
     },
     legend: {
-      align: "right",
+      align: 'right',
       x: -30,
-      verticalAlign: "top",
+      verticalAlign: 'top',
       y: 25,
       floating: true,
       backgroundColor:
-        Highcharts.defaultOptions.legend.backgroundColor || "white",
-      borderColor: "#CCC",
+        Highcharts.defaultOptions.legend.backgroundColor || 'white',
+      borderColor: '#CCC',
       borderWidth: 1,
-      shadow: false
+      shadow: false,
     },
     tooltip: {
-      headerFormat: "<b>{point.x}</b><br/>",
-      pointFormat: "Total: {point.stackTotal}"
+      headerFormat: '<b>{point.x}</b><br/>',
+      pointFormat: 'Total: {point.stackTotal}',
     },
     plotOptions: {
       column: {
-        stacking: "normal",
+        stacking: 'normal',
         dataLabels: {
-          enabled: true
-        }
-      }
+          enabled: true,
+        },
+      },
     },
     series: [
       {
         name: seriesName,
-        data: Object.values(data)
-      }
-    ]
+        data: Object.values(data),
+      },
+    ],
   });
 }
 
 function displayChartForNestedObject(
-  fileName,
-  titleText,
-  yAxisText,
-  seriesName
+    fileName,
+    titleText,
+    yAxisText,
+    seriesName
 ) {
-  fetch("../output/" + fileName + ".json")
-    .then(response => response.json())
-    .then(data => {
-      chartForNestedObjects(data, titleText, yAxisText, seriesName);
-    });
+  fetch('../output/' + fileName + '.json')
+      .then((response) => response.json())
+      .then((data) => {
+        chartForNestedObjects(data, titleText, yAxisText, seriesName);
+      });
 }
+
 function chartForNestedObjects(data, titleText, yAxisText) {
-  let teamNames = Object.keys(data);
-  let teamsResult = teamNames.reduce((yearlyResult, teamName) => {
+  const teamNames = Object.keys(data);
+  const teamsResult = teamNames.reduce((yearlyResult, teamName) => {
     temp = {};
-    temp["name"] = teamName;
-    temp["data"] = Object.values(data[teamName]);
+    temp['name'] = teamName;
+    temp['data'] = Object.values(data[teamName]);
     yearlyResult.push(temp);
     return yearlyResult;
   }, []);
-  let years = Object.keys(data[teamNames[0]]);
+  const years = Object.keys(data[teamNames[0]]);
 
-  Highcharts.chart("container", {
+  Highcharts.chart('container', {
     chart: {
-      type: "bar"
+      type: 'bar',
     },
     title: {
-      text: titleText
+      text: titleText,
     },
     xAxis: {
-      categories: years
+      categories: years,
     },
     yAxis: {
       min: 0,
       title: {
-        text: yAxisText
-      }
+        text: yAxisText,
+      },
     },
     legend: {
-      reversed: true
+      reversed: true,
     },
     plotOptions: {
       series: {
-        stacking: "normal"
-      }
+        stacking: 'normal',
+      },
     },
-    series: teamsResult
+    series: teamsResult,
   });
 }
