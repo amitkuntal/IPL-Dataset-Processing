@@ -3,7 +3,7 @@ const dataprocessingFunctions=require('./dataprocessing.js')
 const csv=require('csvtojson')
 const fs = require("fs");
 
-const filepath='./data-set/matches.csv';
+const filepath='../data-set/matches.csv';
 csv().fromFile(filepath).then((matchesJson)=>{
         let matchesPerYear=dataprocessingFunctions.matchesPerYear(matchesJson);
         writeJSONFile(matchesPerYear,'matchesPerYear');
@@ -11,7 +11,7 @@ csv().fromFile(filepath).then((matchesJson)=>{
         let matchesWonPerTeamForAllYear=dataprocessingFunctions.matchesWonPerTeamForAllYear(matchesJson);
         writeJSONFile(matchesWonPerTeamForAllYear,'matchesWonPerTeamForAllYear')
 
-        csv().fromFile('./data-set/deliveries.csv').then((deliveriesJson)=>{
+        csv().fromFile('../data-set/deliveries.csv').then((deliveriesJson)=>{
 
           let extraRunConductedInYear=dataprocessingFunctions.extraRunConductedInYear(matchesJson,deliveriesJson,'2016');
           writeJSONFile(extraRunConductedInYear,'extraRunConductedInYear')
@@ -28,7 +28,7 @@ csv().fromFile(filepath).then((matchesJson)=>{
 
 
  function writeJSONFile(result,JSONfilename){
-       fs.writeFile(`./output/${JSONfilename}.json`, JSON.stringify(result), (err) => {
+       fs.writeFile(`../output/${JSONfilename}.json`, JSON.stringify(result), (err) => {
             if (err) {
                 console.error(err);
                 return;

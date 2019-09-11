@@ -101,19 +101,19 @@ function economicalBowlersInYears(matches,deliveries,year,topCount)
     if((matches.length > 0 && deliveries.length>0) && (typeof(matches)=='object' && typeof(deliveries)=='object'))
     {
       let matchId=matches.filter((match)=>match.season==year).map((match)=> match.id);
-      let bolAndRunCount=deliveries.reduce((bolAndRunCount,delivery)=>{
+      let ballAndRunCount=deliveries.reduce((ballAndRunCount,delivery)=>{
         if(matchId.includes(delivery['match_id']))
         {
-          if(bolAndRunCount[delivery['bowler']]==undefined)
+          if(ballAndRunCount[delivery['bowler']]==undefined)
             {
-              bolAndRunCount[delivery['bowler']]={};
+              ballAndRunCount[delivery['bowler']]={};
             }
-            bolAndRunCount[delivery['bowler']]['total_runs']=(bolAndRunCount[delivery['bowler']]['total_runs'] || 0)+ (parseInt(delivery['total_runs']))-((parseInt(delivery['legbye_runs']))+parseInt(delivery['bye_runs']));
-            bolAndRunCount[delivery['bowler']]['total_balls']=(bolAndRunCount[delivery['bowler']]['total_balls'] ||0)+1;
+            ballAndRunCount[delivery['bowler']]['total_runs']=(ballAndRunCount[delivery['bowler']]['total_runs'] || 0)+ (parseInt(delivery['total_runs']))-((parseInt(delivery['legbye_runs']))+parseInt(delivery['bye_runs']));
+            ballAndRunCount[delivery['bowler']]['total_balls']=(ballAndRunCount[delivery['bowler']]['total_balls'] ||0)+1;
         }
-        return bolAndRunCount;
+        return ballAndRunCount;
       },{})
-      var sortedEconomy = calculateEconomy(bolAndRunCount).sort(function(bowlerOne, bowlerTwo) {
+      var sortedEconomy = calculateEconomy(ballAndRunCount).sort(function(bowlerOne, bowlerTwo) {
                       return bowlerOne.economy - bowlerTwo.economy;
                     });
       var bowlersEconomy=getTopBowlersEconomy(sortedEconomy,topCount);
@@ -133,14 +133,14 @@ function economicalBowlersInYears(matches,deliveries,year,topCount)
       }
 }
   
-function calculateEconomy(bolAndRunCount){
+function calculateEconomy(ballAndRunCount){
 
-  return Object.entries(bolAndRunCount).reduce((economy,bolAndRunCount)=>
+  return Object.entries(ballAndRunCount).reduce((economy,ballAndRunCount)=>
           {
 
             var bowlerEconomy={}
-            bowlerEconomy['bowler_name']=bolAndRunCount[0]
-            bowlerEconomy['economy']=parseFloat((bolAndRunCount[1]["total_runs"]/(bolAndRunCount[1]["total_balls"]/6)).toFixed(2));
+            bowlerEconomy['bowler_name']=ballAndRunCount[0]
+            bowlerEconomy['economy']=parseFloat((ballAndRunCount[1]["total_runs"]/(ballAndRunCount[1]["total_balls"]/6)).toFixed(2));
             economy.push(bowlerEconomy);
             return economy;
           },[])
