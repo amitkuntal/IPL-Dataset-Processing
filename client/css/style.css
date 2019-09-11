@@ -1,0 +1,31 @@
+#container{
+    min-width: 310px; 
+    height: 400px; 
+    margin: 0 auto;
+}
+header{
+    display: flex;
+    flex-flow: row wrap;
+    width: 98%;
+    justify-content: center;
+    padding: 1vw;
+    font-size: 2.5em;
+    font-family: 'Lexend Tera', sans-serif;
+
+}
+.controls{
+    display: flex;
+    flex-flow: row wrap;
+    width: 100%;
+    justify-content: space-around;
+    margin-top: 2vw;
+    margin-bottom: 2vw;
+}
+button{
+    background-color: darkcyan;
+    border: none;
+    border-radius: 3vh;
+    color: white;
+    padding: 2vw;
+
+}

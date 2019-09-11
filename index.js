@@ -4,8 +4,7 @@ const csv=require('csvtojson')
 const fs = require("fs");
 
 const filepath='./data-set/matches.csv';
-try{
-    csv().fromFile(filepath).then((matchesJson)=>{
+csv().fromFile(filepath).then((matchesJson)=>{
         let matchesPerYear=dataprocessingFunctions.matchesPerYear(matchesJson);
         writeJSONFile(matchesPerYear,'matchesPerYear');
 
@@ -25,15 +24,11 @@ try{
         
     })
     // .catch(() => {})
-}
-catch(err){
-  console.log(err);
-}
+
 
 
  function writeJSONFile(result,JSONfilename){
-      try{
-        fs.writeFile("./output/"+JSONfilename+".json", JSON.stringify(result), (err) => {
+       fs.writeFile(`./output/${JSONfilename}.json`, JSON.stringify(result), (err) => {
             if (err) {
                 console.error(err);
                 return;
@@ -41,11 +36,8 @@ catch(err){
             console.log(JSONfilename+".json  created");
         });
     }
-    catch(err)
-    {
-      console.log(err);
-    }
-}
+    
+
 
 // module.exports.writeJSONFile=writeJSONFile;
 

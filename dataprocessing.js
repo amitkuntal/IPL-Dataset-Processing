@@ -29,33 +29,38 @@ function matchesWonPerTeamForAllYear(matchesJson)
   try{
     if(matchesJson.length > 0 && typeof(matchesJson)=='object')
     {
-      let matchesSeason=matchesJson.reduce((seasons,x)=>{
-        if(! (seasons.includes(x["season"])))
+      let matchesSeason=matchesJson.reduce((iplSeasons,match)=>{
+        if(! (iplSeasons.includes(match["season"])))
         {
-          seasons.push(x["season"])
+          iplSeasons.push(match["season"])
         }
-        return seasons;
+        return iplSeasons;
       },[])
     
       let matchesPerTeam=matchesJson.reduce((matchesPerTeam,match)=>{
+        if(match['winner'] !=="")
+        {
         if(matchesPerTeam[match['winner']]==undefined)
         {
           matchesPerTeam[match['winner']]={};
         }
         matchesPerTeam[match['winner']][match['season']] = (matchesPerTeam[match['winner']][match['season']] || 0)+1;
+        }
         return matchesPerTeam;
         },{});
         
         let teamsName=Object.keys(matchesPerTeam)
-     teamsName.map((teamName)=>{
-       matchesSeason.map((season)=>{
-          if(matchesPerTeam[teamName][season]==undefined)
-         {
-           matchesPerTeam[teamName][season]=0;
-         }
-       })
-     });
-      return matchesPerTeam;
+        let teamWins= teamsName.reduce((teamWins,teamName)=>{
+          teamWins[teamName]=matchesPerTeam[teamName]
+           matchesSeason.map((season)=>{
+              if(teamWins[teamName][season]==undefined)
+             {
+              teamWins[teamName][season]=0;
+             }
+           })
+           return teamWins
+         },{});
+          return teamWins;
     }
     return "You entered empty file or file data is not proper format";
   }
@@ -70,16 +75,16 @@ function extraRunConductedInYear(matches,deliveries,year)
   try{
     if((matches.length > 0 && deliveries.length>0) && (typeof(matches)=='object' && typeof(deliveries)=='object'))
     {
-    let matchId=matches.filter((match)=>match.season==year).map((match)=> match.id);
+    let matchsId=matches.filter((match)=>match.season==year).map((match)=> match.id);
 
-    let extraRun = deliveries.reduce((extraRun,delivery)=>{
-      if(matchId.includes(delivery['match_id']))
+    let extraRuns = deliveries.reduce((extraRuns,delivery)=>{
+      if(matchsId.includes(delivery['match_id']))
       {
-        extraRun[delivery['bowling_team']]=(extraRun[delivery['bowling_team']] || 0)+parseInt(delivery['extra_runs']);
+        extraRuns[delivery['bowling_team']]=(extraRuns[delivery['bowling_team']] || 0)+parseInt(delivery['extra_runs']);
       }
-      return extraRun;
+      return extraRuns;
     },{})
-    return extraRun;
+    return extraRuns;
   }
   return "You entered empty file or file data is not proper format";
   }
@@ -108,8 +113,10 @@ function economicalBowlersInYears(matches,deliveries,year,topCount)
         }
         return bolAndRunCount;
       },{})
-      
-      var bowlersEconomy=getTopBowlersEconomy(calculateEconomy(bolAndRunCount),topCount);
+      var sortedEconomy = calculateEconomy(bolAndRunCount).sort(function(bowlerOne, bowlerTwo) {
+                      return bowlerOne.economy - bowlerTwo.economy;
+                    });
+      var bowlersEconomy=getTopBowlersEconomy(sortedEconomy,topCount);
   
       var getTopBowlers=bowlersEconomy.reduce((getTopBowlers,bowler)=>{
         getTopBowlers[bowler['bowler_name']]=bowler['economy'];
@@ -136,9 +143,7 @@ function calculateEconomy(bolAndRunCount){
             bowlerEconomy['economy']=parseFloat((bolAndRunCount[1]["total_runs"]/(bolAndRunCount[1]["total_balls"]/6)).toFixed(2));
             economy.push(bowlerEconomy);
             return economy;
-          },[]).sort(function(bowlerOne, bowlerTwo) {
-            return bowlerOne.economy - bowlerTwo.economy;
-          });
+          },[])
 }
 
 function getTopBowlersEconomy(bowlersEconomy,count=10)
