@@ -1,4 +1,4 @@
-const dataProcessing = require('../dataprocessing.js');
+const dataProcessing = require('../server/dataprocessing.js');
 let matchData = [{"id": 1,"season": 2017,"winner": "Sunrisers Hyderabad"},{"id": 2,"season": 2017,"winner": "Rising Pune Supergiant"},
 {"id": 3, "season": 2017,"winner": "Kolkata Knight Riders"},{"id": 4,"season": 2017,"winner": "Kings XI Punjab"},{"id": 5,"season": 2017,"winner": "Royal Challengers Bangalore"},
 {"id": 6,"season": 2017,"winner": "Sunrisers Hyderabad"},{"id": 7,"season": 2017,"winner": "Mumbai Indians"},{"id": 8,"season": 2017,"winner": "Kings XI Punjab"}];

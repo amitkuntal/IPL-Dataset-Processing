@@ -5,16 +5,16 @@ function matchesPerYear(matchesJson)
   try{
         if(matchesJson.length > 0 && typeof(matchesJson)=='object')
         {
-            let matches=matchesJson.reduce((matches,match)=>{
-              matches[match['season']] = (matches[match['season']] || 0)+1;
-                return matches;
+            let seasons=matchesJson.reduce((seasons,match)=>{
+              seasons[match['season']] = (seasons[match['season']] || 0)+1;
+                return seasons;
               },{});
       
-            if(matches["undefined"])
+            if(seasons["undefined"])
             {
               return "Could not find session in current data";
             }
-            return matches;  
+            return seasons;  
         }
       return "You entered empty file or file data is not proper format";
     }
@@ -101,7 +101,8 @@ function economicalBowlersInYears(matches,deliveries,year,topCount)
     if((matches.length > 0 && deliveries.length>0) && (typeof(matches)=='object' && typeof(deliveries)=='object'))
     {
       let matchId=matches.filter((match)=>match.season==year).map((match)=> match.id);
-      let ballAndRunCount=deliveries.reduce((ballAndRunCount,delivery)=>{
+      let ballAndRunCount=deliveries.reduce((ballAndRunCount,delivery)=>
+      {
         if(matchId.includes(delivery['match_id']))
         {
           if(ballAndRunCount[delivery['bowler']]==undefined)
