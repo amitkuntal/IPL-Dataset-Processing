@@ -8,12 +8,13 @@ http.createServer( function(request, response) {
   let pathname = url.parse(request.url).pathname;
   console.log('Request Url:-'+request.url);
   console.log('Request for ' + pathname + ' received.');
+  
   if (pathname=='/') {
     pathname+="../client/index.html";
+  } else {
+    pathname='/../client'+pathname;
   }
-  else{
-      pathname='/../client'+pathname
-  }
+
   let path= pathname.split('.');
   if (path.includes('json')) {
     path=path[2].split('/');
@@ -23,7 +24,9 @@ http.createServer( function(request, response) {
     if (err) {
       console.log(err);
       response.writeHead(404, {'Content-Type': 'text/html'});
-    } else {
+      response.write("<h1>Not Found</h1>")
+    } 
+    else {
       const path= pathname.split('.');
       let cType;
       if (path.includes('css')) {
